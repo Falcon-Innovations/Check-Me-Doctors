@@ -24,6 +24,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import { COLORS } from './constants';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -111,7 +112,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   highlight: {
-    fontWeight: '700',
+    color:COLORS.primary_400,
+    fontFamily:"Poppins-Italic"
   },
 });
 

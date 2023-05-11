@@ -5,56 +5,23 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, {useState} from 'react';
+
 import {
   SafeAreaView,
-  ScrollView,
+  Text,
   StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-import { COLORS } from './constants';
+import LeftIcon from 'react-native-vector-icons/Feather';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {COLORS} from './constants';
+import {AppButton} from './components';
+import {ButtonType} from './components/common/buttons/AppButton';
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -63,36 +30,66 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
+
+  const handleButtonPress = () => {
+    setIsLoading(true);
+    setIsDisabled(true);
+ 
+
+    setTimeout(() => {
+      setIsLoading(false);
+      setIsDisabled(false);
+    }, 3000);
+  };
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+
+      <View>
+        <AppButton
+          onPress={handleButtonPress}
+          type={ButtonType.SOLID}
+          loading={isLoading}
+          disabled={isDisabled}
+          label='Solid Button'
+          textColors={isDisabled ? COLORS.white : COLORS.white}
+          leftIcon={<LeftIcon name="award" color="#ffffff" size={16} />}
+          rightIcon={<LeftIcon name="book" color="#ffffff" size={16} />}
+          bgColor={
+            isPressed
+              ? COLORS.primary_800
+              : isDisabled
+              ? COLORS.neutral_100
+              : isLoading
+              ? COLORS.primary_50
+              : COLORS.primary_400
+          }
+          pressed={isPressed}
+        />
+        <AppButton
+          onPress={handleButtonPress}
+          type={ButtonType.OUTLINED}
+          label='Outlined Button'
+          loading={isLoading}
+          disabled={isDisabled}
+          bgColor='transparent'
+          borderColor={isDisabled ? COLORS.neutral_100 : COLORS.primary_400}
+        />
+        <AppButton
+          onPress={handleButtonPress}
+          label='Text Button'
+          type={ButtonType.TEXT}
+          loading={isLoading}
+          disabled={isDisabled}
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -112,8 +109,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   highlight: {
-    color:COLORS.primary_400,
-    fontFamily:"Poppins-Italic"
+    color: COLORS.success_700,
+    fontFamily: 'Poppins-Italic',
   },
 });
 

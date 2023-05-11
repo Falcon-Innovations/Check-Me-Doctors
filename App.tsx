@@ -64,12 +64,12 @@ function App(): JSX.Element {
           rightIcon={<LeftIcon name="book" color="#ffffff" size={16} />}
           bgColor={
             isPressed
-              ? COLORS.primary_800
+              ? COLORS.primary.primary_800
               : isDisabled
-              ? COLORS.neutral_100
+              ? COLORS.neutral.neutral_100
               : isLoading
-              ? COLORS.primary_50
-              : COLORS.primary_400
+              ? COLORS.primary.primary_50
+              : COLORS.primary.primary_400
           }
           pressed={isPressed}
         />
@@ -80,7 +80,7 @@ function App(): JSX.Element {
           loading={isLoading}
           disabled={isDisabled}
           bgColor='transparent'
-          borderColor={isDisabled ? COLORS.neutral_100 : COLORS.primary_400}
+          borderColor={isDisabled ? COLORS.neutral.neutral_100 : COLORS.primary.primary_400}
         />
         <AppButton
           onPress={handleButtonPress}
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   highlight: {
-    color: COLORS.success_700,
+    color: COLORS.success.success_700,
     fontFamily: 'Poppins-Italic',
   },
 });

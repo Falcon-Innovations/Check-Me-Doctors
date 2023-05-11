@@ -48,9 +48,9 @@ const AppButton: React.FC<ButtonProps> = ({
   height,
 }) => {
 
-  const backGroundColor = bgColor ? bgColor : COLORS.primary_400;
-  const borderColors = borderColor ? borderColor : COLORS.primary_400; 
-  const textColor = textColors ? textColors : COLORS.primary_400;
+  const backGroundColor = bgColor ? bgColor : COLORS.primary.primary_400;
+  const borderColors = borderColor ? borderColor : COLORS.primary.primary_400; 
+  const textColor = textColors ? textColors : COLORS.primary.primary_400;
   const paddingHorizontal = leftIcon || rightIcon? 10 : 2
   const btnHeight = height ? height : 48
   return (
@@ -96,10 +96,10 @@ const styles = StyleSheet.create({
   },
 
   solid: {
-    backgroundColor: COLORS.primary_400,
+    backgroundColor: COLORS.primary.primary_400,
   },
   outlined: {
-    borderColor: COLORS.primary_400,
+    borderColor: COLORS.primary.primary_400,
     backgroundColor: 'transparent',
     borderWidth: 1,
   },

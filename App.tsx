@@ -5,8 +5,8 @@
  * @format
  */
 
-import React, {useState} from 'react';
-
+import React, {useState, useRef} from 'react';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {
   SafeAreaView,
   Text,
@@ -14,14 +14,18 @@ import {
   StyleSheet,
   useColorScheme,
   View,
+  Keyboard,
+  Alert,
 } from 'react-native';
 
 import LeftIcon from 'react-native-vector-icons/Feather';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {COLORS} from './constants';
+import {COLORS, SIZES} from './constants';
 import {AppButton} from './components';
 import {ButtonType} from './components/common/buttons/AppButton';
+import {CustomInput, CustomPhoneInput} from './components/common/inputs';
+import {KeyboadType} from './components/common/inputs/CustomInput';
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -30,67 +34,124 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [isPressed, setIsPressed] = useState(false);
+  const phoneInput = useRef(null);
 
-  const handleButtonPress = () => {
-    setIsLoading(true);
-    setIsDisabled(true);
- 
+  const [inputs, setInputs] = useState({
+    fullname: '',
+    phone: '',
+    password: '',
+    email: '',
+  });
+  const [errors, setErrors] = useState({
+    fullname: '',
+    phone: '',
+    password: '',
+    email: '',
+  });
 
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsDisabled(false);
-    }, 3000);
+  const handleInputChange = (value: string, input: any) => {
+    setInputs(prevState => ({...prevState, [input]: value}));
+  };
+
+  const handleErrors = (errorMessage: string, input: any) => {
+    setErrors(prevState => ({...prevState, [input]: errorMessage}));
+  };
+
+
+
+  const handleValidation = () => {
+    Keyboard.dismiss();
+    let isValid = true;
+    if (!inputs?.email) {
+      handleErrors('This field is required', 'email');
+      isValid = false;
+    } else if (
+      inputs?.email &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputs.email)
+    ) {
+      handleErrors('Invalid email address', 'email');
+      isValid = false;
+    }
+
+    if (
+      inputs.password &&
+      !/(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+]).{8,}/.test(
+        inputs.password,
+      )
+    ) {
+      isValid = false;
+      handleErrors(
+        'Password must contain at least 8 characters including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character',
+        'password',
+      );
+    } else if (!inputs.password) {
+      isValid = false;
+      handleErrors('This field is required', 'password');
+    }
+
+    if (!inputs?.fullname) {
+      handleErrors('This field is required', 'fullname');
+      isValid = false;
+    }
+    if (inputs?.phone.length < 9) {
+      isValid = false;
+      handleErrors('Enter valid phone number', 'phone');
+    }
+
+    if (isValid) {
+      Alert.alert(
+        'Valid',
+        `Your email is ${inputs.email} password ${inputs.password} ${inputs.phone} `,
+      );
+    } else {
+      Alert.alert('Invalid');
+    }
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
+    <PaperProvider>
+      <SafeAreaView
+        style={[backgroundStyle, {paddingHorizontal: 12, paddingVertical: 20}]}>
+        <StatusBar
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          backgroundColor={backgroundStyle.backgroundColor}
+        />
 
-      <View>
+        <View>
+          <CustomInput
+            onChangeText={text => handleInputChange(text, 'fullname')}
+            value={inputs?.fullname}
+            placeholder="Full Name"
+          />
+          <CustomInput
+            onChangeText={text => handleInputChange(text, 'email')}
+            value={inputs?.email}
+            placeholder="Email Address"
+            email
+            keyboard={KeyboadType.EMAIL_ADDRESS}
+          />
+          <CustomInput
+            onChangeText={text => handleInputChange(text, 'password')}
+            value={inputs?.password}
+            password
+            secureTextEntry
+            placeholder="Password"
+          />
+          <CustomPhoneInput
+          phoneInput={phoneInput}
+            error={errors?.phone}
+            value={inputs?.phone}
+            onChangeText={text => handleInputChange(text, 'phone')}
+            placeholder="673 993 113"
+          />
+        </View>
         <AppButton
-          onPress={handleButtonPress}
-          type={ButtonType.SOLID}
-          loading={isLoading}
-          disabled={isDisabled}
-          label='Solid Button'
-          textColors={isDisabled ? COLORS.white : COLORS.white}
-          leftIcon={<LeftIcon name="award" color="#ffffff" size={16} />}
-          rightIcon={<LeftIcon name="book" color="#ffffff" size={16} />}
-          bgColor={
-            isPressed
-              ? COLORS.primary.primary_800
-              : isDisabled
-              ? COLORS.neutral.neutral_100
-              : isLoading
-              ? COLORS.primary.primary_50
-              : COLORS.primary.primary_400
-          }
-          pressed={isPressed}
-        />
-        <AppButton
-          onPress={handleButtonPress}
           type={ButtonType.OUTLINED}
-          label='Outlined Button'
-          loading={isLoading}
-          disabled={isDisabled}
-          bgColor='transparent'
-          borderColor={isDisabled ? COLORS.neutral.neutral_100 : COLORS.primary.primary_400}
+          label="Continue"
+          onPress={handleValidation}
         />
-        <AppButton
-          onPress={handleButtonPress}
-          label='Text Button'
-          type={ButtonType.TEXT}
-          loading={isLoading}
-          disabled={isDisabled}
-        />
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </PaperProvider>
   );
 }
 

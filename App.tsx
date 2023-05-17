@@ -5,55 +5,27 @@
  * @format
  */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, {useState, useRef} from 'react';
+import {Provider as PaperProvider} from 'react-native-paper';
 import {
   SafeAreaView,
-  ScrollView,
+  Text,
   StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
   View,
+  Keyboard,
+  Alert,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import LeftIcon from 'react-native-vector-icons/Feather';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {COLORS, SIZES} from './constants';
+import {AppButton} from './components';
+import {ButtonType} from './components/common/buttons/AppButton';
+import {CustomInput, CustomPhoneInput} from './components/common/inputs';
+import {KeyboadType} from './components/common/inputs/CustomInput';
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -62,37 +34,124 @@ function App(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  const phoneInput = useRef(null);
+
+  const [inputs, setInputs] = useState({
+    fullname: '',
+    phone: '',
+    password: '',
+    email: '',
+  });
+  const [errors, setErrors] = useState({
+    fullname: '',
+    phone: '',
+    password: '',
+    email: '',
+  });
+
+  const handleInputChange = (value: string, input: any) => {
+    setInputs(prevState => ({...prevState, [input]: value}));
+  };
+
+  const handleErrors = (errorMessage: string, input: any) => {
+    setErrors(prevState => ({...prevState, [input]: errorMessage}));
+  };
+
+
+
+  const handleValidation = () => {
+    Keyboard.dismiss();
+    let isValid = true;
+    if (!inputs?.email) {
+      handleErrors('This field is required', 'email');
+      isValid = false;
+    } else if (
+      inputs?.email &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputs.email)
+    ) {
+      handleErrors('Invalid email address', 'email');
+      isValid = false;
+    }
+
+    if (
+      inputs.password &&
+      !/(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+]).{8,}/.test(
+        inputs.password,
+      )
+    ) {
+      isValid = false;
+      handleErrors(
+        'Password must contain at least 8 characters including 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character',
+        'password',
+      );
+    } else if (!inputs.password) {
+      isValid = false;
+      handleErrors('This field is required', 'password');
+    }
+
+    if (!inputs?.fullname) {
+      handleErrors('This field is required', 'fullname');
+      isValid = false;
+    }
+    if (inputs?.phone.length < 9) {
+      isValid = false;
+      handleErrors('Enter valid phone number', 'phone');
+    }
+
+    if (isValid) {
+      Alert.alert(
+        'Valid',
+        `Your email is ${inputs.email} password ${inputs.password} ${inputs.phone} `,
+      );
+    } else {
+      Alert.alert('Invalid');
+    }
+  };
+
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+    <PaperProvider>
+      <SafeAreaView
+        style={[backgroundStyle, {paddingHorizontal: 12, paddingVertical: 20}]}>
+        <StatusBar
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          backgroundColor={backgroundStyle.backgroundColor}
+        />
+
+        <View>
+          <CustomInput
+            onChangeText={text => handleInputChange(text, 'fullname')}
+            value={inputs?.fullname}
+            placeholder="Full Name"
+          />
+          <CustomInput
+            onChangeText={text => handleInputChange(text, 'email')}
+            value={inputs?.email}
+            placeholder="Email Address"
+            email
+            keyboard={KeyboadType.EMAIL_ADDRESS}
+          />
+          <CustomInput
+            onChangeText={text => handleInputChange(text, 'password')}
+            value={inputs?.password}
+            password
+            secureTextEntry
+            placeholder="Password"
+          />
+          <CustomPhoneInput
+          phoneInput={phoneInput}
+            error={errors?.phone}
+            value={inputs?.phone}
+            onChangeText={text => handleInputChange(text, 'phone')}
+            placeholder="673 993 113"
+          />
         </View>
-      </ScrollView>
-    </SafeAreaView>
+        <AppButton
+          type={ButtonType.OUTLINED}
+          label="Continue"
+          onPress={handleValidation}
+        />
+      </SafeAreaView>
+    </PaperProvider>
   );
 }
 
@@ -111,7 +170,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   highlight: {
-    fontWeight: '700',
+    color: COLORS.success.success_700,
+    fontFamily: 'Poppins-Italic',
   },
 });
 

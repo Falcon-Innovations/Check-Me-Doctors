@@ -24,7 +24,7 @@ const CustomPhoneInput: React.FC<CustomProps> = ({
     if (value && value.length < 9) {
       return 'Phone number must be at least 9 characters long';
     }
-    if(!isValid){
+    if(value && !isValid){
         return 'Please enter a valid phone number'
     }
     return '';

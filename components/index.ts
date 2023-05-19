@@ -1,3 +1,4 @@
-import { AppButton } from "./common/buttons";
+import { AppButton, BackButton } from "./common/buttons";
+import { CustomInput, CustomPhoneInput } from "./common/inputs";
 
-export {AppButton}
+export {AppButton, CustomInput, CustomPhoneInput, BackButton}

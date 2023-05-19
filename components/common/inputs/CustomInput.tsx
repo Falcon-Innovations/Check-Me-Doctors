@@ -28,6 +28,7 @@ interface CustomInputProps {
   password?: boolean;
   mode?: Mode;
   keyboard?: KeyboadType;
+  mutliline?: boolean;
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({
@@ -39,7 +40,8 @@ const CustomInput: React.FC<CustomInputProps> = ({
   password,
   placeholder,
   mode = Mode.OUTLINED,
-  keyboard = KeyboadType.DEFAULT
+  keyboard = KeyboadType.DEFAULT,
+  mutliline,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(secureTextEntry);
@@ -92,6 +94,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
       <TextInput
         mode={mode}
         label={label}
+        multiline={mutliline}
         keyboardType={keyboard}
         value={value}
         placeholder={placeholder}

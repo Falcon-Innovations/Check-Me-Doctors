@@ -29,6 +29,7 @@ type ButtonProps = {
   textColors?:string;
   padding?:number;
   height?:number;
+  width?:number
 };
 
 const AppButton: React.FC<ButtonProps> = ({
@@ -45,6 +46,7 @@ const AppButton: React.FC<ButtonProps> = ({
   borderColor,
   textColors,
   padding,
+  width,
   height,
 }) => {
 
@@ -53,12 +55,13 @@ const AppButton: React.FC<ButtonProps> = ({
   const textColor = textColors ? textColors : COLORS.primary.primary_400;
   const paddingHorizontal = leftIcon || rightIcon? 10 : 2
   const btnHeight = height ? height : 48
+  const btnWidth = width ? width : SIZES.screenWidth * 0.9;
   return (
     <>
       <TouchableOpacity
         onPress={onPress}
         style={[
-          styles.button,{height: btnHeight},
+          styles.button,{height: btnHeight, width:btnWidth},
           type === ButtonType.SOLID
             ? [styles.solid,{backgroundColor: backGroundColor}]
             : type === ButtonType.OUTLINED
@@ -82,6 +85,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     alignSelf: 'flex-start',
     alignItems: 'center',
+    justifyContent:"center",
     flexDirection: 'row',
     marginVertical: 10,
     
@@ -93,6 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     fontFamily:'Poppins-Medium',
+    alignSelf:"center",
 
   },
 

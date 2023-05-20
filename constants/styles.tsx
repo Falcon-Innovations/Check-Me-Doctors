@@ -8,6 +8,8 @@ const SIZES = {
 
   authIconSizes: 24,
 
+  screenPaddingHorizontal:20,
+
   screenWidth: Dimensions.get('window').width,
   screenHeight: Dimensions.get('window').height,
 };

@@ -23,6 +23,9 @@ interface CustomInputProps {
   error?: any;
   onChangeText: (text: string) => void;
   secureTextEntry?: boolean;
+  iconLeft?:boolean;
+  iconName?: string;
+  iconLibrary?:JSX.Element;
   onFocus?: () => void;
   email?: boolean;
   password?: boolean;
@@ -42,6 +45,9 @@ const CustomInput: React.FC<CustomInputProps> = ({
   mode = Mode.OUTLINED,
   keyboard = KeyboadType.DEFAULT,
   mutliline,
+  iconLeft,
+  iconLibrary,
+  iconName = 'email-outline',
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(secureTextEntry);
@@ -106,11 +112,19 @@ const CustomInput: React.FC<CustomInputProps> = ({
         placeholderTextColor={COLORS.neutral.neutral_200}
         onBlur={handleBlur}
         style={[styles.inputContainer, inputStyles]}
+        left={
+          iconLeft && (
+            <TextInput.Icon
+              icon={iconName}
+              color={COLORS.neutral.neutral_300}
+            />
+          )
+        }
         right={
           secureTextEntry && (
             <TextInput.Icon
               onPress={() => setHidePassword(!hidePassword)}
-              icon={hidePassword ? 'eye' : 'eye-off'}
+              icon={hidePassword ? 'eye-off-outline' : 'eye-outline'}
               color={COLORS.neutral.neutral_300}
             />
           )

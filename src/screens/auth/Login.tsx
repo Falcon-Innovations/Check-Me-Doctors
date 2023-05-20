@@ -1,25 +1,23 @@
 import React, {useState, useRef} from 'react';
-import {Provider as PaperProvider} from 'react-native-paper';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
   SafeAreaView,
   Text,
+  Image,
   StatusBar,
   StyleSheet,
-  View,
+  TouchableOpacity,
   Keyboard,
   Alert,
+  View,
 } from 'react-native';
 
-
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import { AppButton, BackButton, CustomInput, CustomPhoneInput } from '../../../components';
-import { ButtonType } from '../../../components/common/buttons/AppButton';
-import { COLORS } from '../../../constants';
-import { KeyboadType } from '../../../components/common/inputs/CustomInput';
-
+import {AppButton, CustomInput} from '../../../components';
+import {ButtonType} from '../../../components/common/buttons/AppButton';
+import {COLORS, IMAGES, SIZES} from '../../../constants';
+import {KeyboadType} from '../../../components/common/inputs/CustomInput';
 
 const Login = (): JSX.Element => {
-
   const phoneInput = useRef(null);
 
   const [inputs, setInputs] = useState({
@@ -94,77 +92,126 @@ const Login = (): JSX.Element => {
   };
 
   return (
-    <PaperProvider>
-      <SafeAreaView
-        style={{paddingHorizontal: 12, paddingVertical: 20}}>
-        <StatusBar
-            barStyle="light-content"
-        />
-
-        <View>
-          <CustomInput
-            onChangeText={text => handleInputChange(text, 'fullname')}
-            value={inputs?.fullname}
-            placeholder="Full Name"
-          />
-          <CustomInput
-            mutliline
-            onChangeText={text => handleInputChange(text, 'about')}
-            value={inputs?.about}
-            placeholder="Bio"
-          />
-          <CustomInput
-            onChangeText={text => handleInputChange(text, 'email')}
-            value={inputs?.email}
-            placeholder="Email Address"
-            email
-            keyboard={KeyboadType.EMAIL_ADDRESS}
-          />
-          <CustomInput
-            onChangeText={text => handleInputChange(text, 'password')}
-            value={inputs?.password}
-            password
-            secureTextEntry
-            placeholder="Password"
-          />
-
-          <CustomPhoneInput
-            phoneInput={phoneInput}
-            error={errors?.phone}
-            value={inputs?.phone}
-            onChangeText={text => handleInputChange(text, 'phone')}
-            placeholder="673 993 113"
+    <SafeAreaView style={{flex: 1}}>
+      <KeyboardAwareScrollView
+        extraHeight={100}
+        contentContainerStyle={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image
+            source={{uri: IMAGES.loginImage}}
+            style={styles.image}
+            resizeMode="cover"
           />
         </View>
-        <AppButton
-          type={ButtonType.OUTLINED}
-          label="Continue"
-          onPress={handleValidation}
-        />
+        <View style={styles.login}>
+          <View style={{marginBottom: 24}}>
+            <Text style={styles.loginTextTitle}>Welcome!👋</Text>
+            <Text style={styles.loginSubText}>
+              Please enter your details to access your account
+            </Text>
+          </View>
+          <View>
+            <CustomInput
+              onChangeText={text => handleInputChange(text, 'email')}
+              value={inputs?.email}
+              placeholder="Email address"
+              email
+              iconLeft
+              keyboard={KeyboadType.EMAIL_ADDRESS}
+            />
+            <View style={{marginTop: 12, marginBottom: 8}}>
+              <CustomInput
+                onChangeText={text => handleInputChange(text, 'password')}
+                value={inputs?.password}
+                password
+                secureTextEntry
+                iconLeft
+                iconName='lock-outline'
+                placeholder="Password"
+              />
+            </View>
+            <TouchableOpacity style={styles.forgotPass}>
+              <Text style={styles.forgotPassText}>Forgot password?</Text>
+            </TouchableOpacity>
+          </View>
 
-        <BackButton />
-      </SafeAreaView>
-    </PaperProvider>
+          <View
+            style={{
+              alignSelf: 'center',
+              paddingHorizontal: 55,
+            }}>
+            <AppButton
+              label="Login"
+              onPress={handleValidation}
+              type={ButtonType.SOLID}
+              textColors={COLORS.white}
+            />
+          </View>
+          <View style={styles.noAccount}>
+            <Text style={styles.noAccountText}>Don’t have an account?</Text>
+            <TouchableOpacity style={{alignSelf: 'center'}}>
+              <Text style={styles.registerText}>Register</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    paddingBottom: 25,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  imageContainer: {
+    paddingTop: SIZES.screenHeight * 0.04,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  image: {
+    width: SIZES.screenWidth,
+    height: SIZES.screenHeight * 0.46,
+    alignSelf:"center"
   },
-  highlight: {
-    color: COLORS.success.success_700,
-    fontFamily: 'Poppins-Italic',
+  login: {
+    paddingHorizontal: SIZES.screenPaddingHorizontal,
+    paddingVertical: 14,
+  },
+  loginTextTitle: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 20,
+    color: COLORS.neutral.neutral_400,
+  },
+  loginSubText: {
+    color: COLORS.primaryLight.primary_light_900,
+    fontSize: 12,
+    fontFamily: 'Poppins-Regular',
+  },
+  forgotPassText: {
+    fontFamily: 'Poppins-SemiBold',
+    color: COLORS.primary.primary_400,
+    fontSize: 12,
+    marginTop: 4,
+  },
+  forgotPass: {
+    alignSelf: 'flex-end',
+    marginBottom: 20,
+  },
+  noAccount: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 25,
+  },
+  noAccountText: {
+    color: COLORS.neutral.neutral_300,
+    fontFamily: 'Poppins-Regular',
+    fontSize: 14,
+    marginRight: 5,
+  },
+  registerText:{
+    color: COLORS.primary.primary_400,
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 16,
   },
 });
 

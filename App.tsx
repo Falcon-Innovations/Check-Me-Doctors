@@ -1,4 +1,7 @@
 import React, {useState} from 'react';
+import {Provider as PaperProvider} from 'react-native-paper';
+
+
 import Navigation from './src/navigation/Navigation';
 
 
@@ -18,5 +21,10 @@ export default function App() {
   };
 
   // Render the navigation based on the authentication status
-  return <Navigation isAuthenticated={isAuthenticated} />;
+  return (
+    <PaperProvider>
+      <Navigation isAuthenticated={isAuthenticated} />
+    </PaperProvider>
+  );
+  
 }

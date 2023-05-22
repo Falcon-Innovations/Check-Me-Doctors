@@ -1,35 +1,34 @@
 import React, {useState, useRef} from 'react';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
 import {
   SafeAreaView,
   Text,
   Image,
-  StatusBar,
   StyleSheet,
   TouchableOpacity,
   Keyboard,
   Alert,
   View,
 } from 'react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {AppButton, CustomInput} from '../../../components';
 import {ButtonType} from '../../../components/common/buttons/AppButton';
 import {COLORS, IMAGES, SIZES} from '../../../constants';
 import {KeyboadType} from '../../../components/common/inputs/CustomInput';
+import { RootStackParamList } from '../../navigation/AuthNavigation';
 
-const Login = (): JSX.Element => {
-  const phoneInput = useRef(null);
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
+const Login = ({navigation}:Props) => {
+
 
   const [inputs, setInputs] = useState({
-    fullname: '',
-    phone: '',
     password: '',
     email: '',
-    about: '',
   });
   const [errors, setErrors] = useState({
-    fullname: '',
-    phone: '',
     password: '',
     email: '',
   });
@@ -72,19 +71,10 @@ const Login = (): JSX.Element => {
       handleErrors('This field is required', 'password');
     }
 
-    if (!inputs?.fullname) {
-      handleErrors('This field is required', 'fullname');
-      isValid = false;
-    }
-    if (inputs?.phone.length < 9) {
-      isValid = false;
-      handleErrors('Enter valid phone number', 'phone');
-    }
-
     if (isValid) {
       Alert.alert(
         'Valid',
-        `Your email is ${inputs.email} password ${inputs.password} ${inputs.phone} `,
+        `Your email is ${inputs.email} password ${inputs.password} `,
       );
     } else {
       Alert.alert('Invalid');
@@ -95,6 +85,7 @@ const Login = (): JSX.Element => {
     <SafeAreaView style={{flex: 1}}>
       <KeyboardAwareScrollView
         extraHeight={100}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.container}>
         <View style={styles.imageContainer}>
           <Image
@@ -117,20 +108,24 @@ const Login = (): JSX.Element => {
               placeholder="Email address"
               email
               iconLeft
+              errors={errors?.email}
               keyboard={KeyboadType.EMAIL_ADDRESS}
             />
             <View style={{marginTop: 12, marginBottom: 8}}>
               <CustomInput
                 onChangeText={text => handleInputChange(text, 'password')}
                 value={inputs?.password}
+                errors={errors.password}
                 password
                 secureTextEntry
                 iconLeft
-                iconName='lock-outline'
+                iconName="lock-outline"
                 placeholder="Password"
               />
             </View>
-            <TouchableOpacity style={styles.forgotPass}>
+            <TouchableOpacity
+              style={styles.forgotPass}
+              onPress={() => navigation.navigate('ForgotPassword')}>
               <Text style={styles.forgotPassText}>Forgot password?</Text>
             </TouchableOpacity>
           </View>
@@ -149,7 +144,7 @@ const Login = (): JSX.Element => {
           </View>
           <View style={styles.noAccount}>
             <Text style={styles.noAccountText}>Don’t have an account?</Text>
-            <TouchableOpacity style={{alignSelf: 'center'}}>
+            <TouchableOpacity onPress={() => navigation.navigate("Register")} style={{alignSelf: 'center'}}>
               <Text style={styles.registerText}>Register</Text>
             </TouchableOpacity>
           </View>

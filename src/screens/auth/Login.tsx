@@ -144,7 +144,7 @@ const Login = ({navigation}:Props) => {
           </View>
           <View style={styles.noAccount}>
             <Text style={styles.noAccountText}>Don’t have an account?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Register")} style={{alignSelf: 'center'}}>
+            <TouchableOpacity onPress={() => navigation.navigate("PersonalDetails")} style={{alignSelf: 'center'}}>
               <Text style={styles.registerText}>Register</Text>
             </TouchableOpacity>
           </View>

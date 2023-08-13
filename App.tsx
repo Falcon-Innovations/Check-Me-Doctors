@@ -40,7 +40,7 @@ export default function App() {
   // Render the navigation based on the authentication status
   return (
     <PaperProvider>
-      <Navigation isFirstLaunch={isFirstLaunch} isAuthenticated={isAuthenticated} />
+      <Navigation isAuthenticated={isAuthenticated} />
     </PaperProvider>
   );
   

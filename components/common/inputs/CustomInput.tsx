@@ -146,12 +146,16 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     backgroundColor: COLORS.neutral.neutral_50,
+    fontSize:12,
+    fontFamily:"Poppins-Regular",
+    color:COLORS.neutral.neutral_400,
+    marginBottom:12,
   },
   errorText: {
     color: COLORS.red.red_500,
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
-    marginTop: 12,
+    // marginTop: 12,
   },
 
 });

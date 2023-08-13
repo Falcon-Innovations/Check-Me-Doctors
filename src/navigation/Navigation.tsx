@@ -15,12 +15,12 @@ export type MainRootStackParamList = {
 
 const Stack = createNativeStackNavigator<MainRootStackParamList>();
 
-const Navigation = ({isAuthenticated,isFirstLaunch}: {isAuthenticated: boolean, isFirstLaunch:boolean}) => {
+const Navigation = ({isAuthenticated}: {isAuthenticated: boolean}) => {
 
 
   return (
     <NavigationContainer>
-      {isFirstLaunch ? (
+      {/* {isFirstLaunch ? (
         <Stack.Navigator>
           <Stack.Screen
             name="onBoarding"
@@ -32,9 +32,9 @@ const Navigation = ({isAuthenticated,isFirstLaunch}: {isAuthenticated: boolean, 
         <MainNavigation />
       ) : (
         <AuthNavigation />
-      )}
+      )} */}
 
-      {/* {isAuthenticated ? <MainNavigation /> : <AuthNavigation />} */}
+      {isAuthenticated ? <MainNavigation /> : <AuthNavigation />}
     </NavigationContainer>
   );
 };

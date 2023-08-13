@@ -1,6 +1,6 @@
 import Login from "./Login";
-import Register from "./Register";
+import { personalDetails } from "./register";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 
-export {Login,Register, ForgotPassword,ResetPassword}
+export {Login,personalDetails, ForgotPassword,ResetPassword}

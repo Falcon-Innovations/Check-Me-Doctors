@@ -20,7 +20,7 @@ interface CustomInputProps {
   label?: string;
   placeholder?: string;
   value: string;
-  error?: any;
+  errors?: any;
   onChangeText: (text: string) => void;
   secureTextEntry?: boolean;
   iconLeft?:boolean;
@@ -47,6 +47,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
   mutliline,
   iconLeft,
   iconLibrary,
+  errors,
   iconName = 'email-outline',
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -132,6 +133,8 @@ const CustomInput: React.FC<CustomInputProps> = ({
       />
       {isFocused && error ? (
         <Text style={styles.errorText}>{error}</Text>
+      ) : errors ? (
+        <Text style={styles.errorText}>{errors}</Text>
       ) : null}
     </>
   );
@@ -143,12 +146,16 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     backgroundColor: COLORS.neutral.neutral_50,
+    fontSize:12,
+    fontFamily:"Poppins-Regular",
+    color:COLORS.neutral.neutral_400,
+    marginBottom:12,
   },
   errorText: {
     color: COLORS.red.red_500,
     fontSize: 12,
     fontFamily: 'Poppins-Regular',
-    marginTop: 12,
+    // marginTop: 12,
   },
 
 });

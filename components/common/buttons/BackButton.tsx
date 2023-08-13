@@ -3,9 +3,13 @@ import Icon from "react-native-vector-icons/Feather"
 import React from 'react'
 import { COLORS } from '../../../constants';
 
-const BackButton = () => {
+type backButtonProps = {
+    onPress?: () => void;
+}
+
+const BackButton: React.FC<backButtonProps> = ({onPress}) => {
   return (
-   <TouchableOpacity style={styles.btnStyles}>
+   <TouchableOpacity style={styles.btnStyles} onPress={onPress}>
     <Icon name='arrow-left' size={24} color={COLORS.neutral.neutral_400} style={styles.iconStyle}/>
    </TouchableOpacity>
   )
